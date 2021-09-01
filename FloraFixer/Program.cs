@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using System.Threading.Tasks;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Synthesis;
@@ -24,6 +25,11 @@ namespace SynFloraFixer
                 if (tree.VirtualMachineAdapter == null)
                 {
                     var otree = state.PatchMod.Trees.GetOrAddAsOverride(tree);
+
+                    if (otree.Name != null && otree.Name.TryLookup(Language.French, out string i18nTreeName)) {
+                        otree.Name = Encoding.GetEncoding("ISO-8859-1").GetString(Encoding.UTF8.GetBytes(i18nTreeName));
+                    }
+
                     Console.WriteLine($"Patching TREE {otree.EditorID}");
                     otree.VirtualMachineAdapter = new VirtualMachineAdapter();
                     otree.VirtualMachineAdapter.Scripts.Add(new ScriptEntry()
@@ -36,7 +42,12 @@ namespace SynFloraFixer
             {
                 if (flora.VirtualMachineAdapter == null)
                 {
-                    var otree = state.PatchMod.Florae.GetOrAddAsOverride(flora); ;
+                    var otree = state.PatchMod.Florae.GetOrAddAsOverride(flora);
+
+                    if (otree.Name != null && otree.Name.TryLookup(Language.French, out string i18nFloraName)) {
+                        otree.Name = Encoding.GetEncoding("ISO-8859-1").GetString(Encoding.UTF8.GetBytes(i18nFloraName));
+                    }
+
                     Console.WriteLine($"Patching FLOR {otree.EditorID}");
                     otree.VirtualMachineAdapter = new VirtualMachineAdapter();
                     otree.VirtualMachineAdapter.Scripts.Add(new ScriptEntry()
